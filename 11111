@@ -1,0 +1,52 @@
+#include "stdafx.h"
+#include <iterator> 
+#include <iostream> 
+#include <vector> 
+#include <string> 
+#include <algorithm> 
+#include <fstream> 
+#include <TCHAR.H>
+
+
+using namespace std;
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	setlocale(LC_ALL, "Russian");
+	vector<string> words;
+
+	ifstream infile("c:\\Autodesk\\input.txt");
+	ofstream outfile("c:\\Autodesk\\out.txt");
+	copy(istream_iterator<string>(infile), istream_iterator<string>(), back_inserter(words));
+
+	vector<string>::iterator wordIter, innerWordIter, iter;
+	string::iterator charIter;
+	string enter("\n");
+	string noAnargams("Аннограмм не имеется!");
+
+	for (iter = words.begin(); iter != words.end(); iter++)
+		cout <<*iter <<"\n";
+
+	int haveAnagrams = 0;
+	for (wordIter = words.begin(); wordIter != words.end(); wordIter++)
+	{
+		for (innerWordIter = words.begin(); innerWordIter != words.end(); innerWordIter++)
+		{
+			if (*wordIter == *innerWordIter) continue;
+			string tempF = *wordIter;
+			sort(tempF.begin(), tempF.end());
+			string tempS = *innerWordIter;
+			sort(tempS.begin(), tempS.end());
+			if (tempF == tempS)
+			{
+				outfile<<*wordIter<<enter;
+				haveAnagrams = 1;
+
+			}
+		}
+	}
+	if (haveAnagrams == 0)
+		outfile<<noAnargams;
+	system("pause");
+	return 0;
+}
